@@ -207,7 +207,7 @@ const Project = () => {
             <Stack spacing={2} direction="row">
               <Button
                 onClick={onCreate}
-                disabled={submitLoading || !projectName}
+                disabled={submitLoading || !projectName||!grammarName}
                 isLoading={submitLoading}
                 loadingText="Creating"
                 colorScheme={"whatsapp"}

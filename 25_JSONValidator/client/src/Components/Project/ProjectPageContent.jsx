@@ -41,6 +41,7 @@ let rules = [];
 let valid_rule = [];
 let grammarDataArray = [];
 let flag = false;
+let fl = false;
 
 const tipcolors = {
   number: "orange",
@@ -56,59 +57,59 @@ const jsonValidator = (grammar, validating) => {
   const keys22 = Object.keys(validating);
 
 
-  const grammarArray = Object.keys(grammar).filter(
-    (value) => !Object.keys(validating).includes(value)
-  );
-
-  const extraEntries = Object.keys(validating).filter(
-    (value) => !Object.keys(grammar).includes(value)
-  );
-
-  extraEntries.map((en) => {
-     let app = 1;
-    for (let i = 0; i < keys.length; i++) {
-
-      if (keys[i] === en || grammar[keys[i]].root === en || grammar[keys[i]].proot === en) {
-        app = 0;
-      }
-    }
-    if (app) {
-      errors.push(`"${en}" is invalid key in the JSON`);
-    }
-  });
   // const grammarArray = Object.keys(grammar).filter(
-  //   (value) =>
-  //   {var app=1;
-  //     for(let i=0; i<keys22.length; i++)
-  //     {
-  //       if(value===validating[keys22[i]]||value===validating[keys22[i]].root||value===validating[keys22[i]].proot)
-  //       {
-  //         app=0;
-  //       }
+  //   (value) => !Object.keys(validating).includes(value)
+  // );
+
+  // const extraEntries = Object.keys(validating).filter(
+  //   (value) => !Object.keys(grammar).includes(value)
+  // );
+
+  // extraEntries.map((en) => {
+  //   let app = 1;
+  //   for (let i = 0; i < keys.length; i++) {
+
+  //     if (keys[i] === en || grammar[keys[i]].root === en || grammar[keys[i]].proot === en) {
+  //       app = 0;
   //     }
-  //     if(app===1)
-  //     {
+  //   }
+  //   if (app) {
+  //     errors.push(`"${en}" is invalid key in the JSON`);
+  //   }
+  // });
+  // // const grammarArray = Object.keys(grammar).filter(
+  // //   (value) =>
+  // //   {var app=1;
+  // //     for(let i=0; i<keys22.length; i++)
+  // //     {
+  // //       if(value===validating[keys22[i]]||value===validating[keys22[i]].root||value===validating[keys22[i]].proot)
+  // //       {
+  // //         app=0;
+  // //       }
+  // //     }
+  // //     if(app===1)
+  // //     {
 
 
+  // //     }
+  // // )
+  // grammarArray.map((en) => {
+  //   let app = 1;
+  //   //alert(en);
+  //   for (let i = 0; i < keys22.length; i++) {
+  //     //console.log(validating[keys22[i]]);
+  //     console.log(grammar[en] + " " + grammar[en].root + " " + grammar[en].proot);
+  //     if (en === keys22[i] || grammar[en].root === keys22[i] || grammar[en].proot === keys22[i]) {
+  //       app = 0;
   //     }
-  // )
-  grammarArray.map((en) => {
-    let app = 1;
-    //alert(en);
-    for (let i = 0; i < keys22.length; i++) {
-      //console.log(validating[keys22[i]]);
-      console.log(grammar[en]+" "+grammar[en].root+" "+grammar[en].proot);
-      if (en === keys22[i] || grammar[en].root === keys22[i] || grammar[en].proot === keys22[i]) {
-        app = 0;
-      }
-    }
-    if (app === 1) {
-      errors.push(
-        `"${en}" is a mandatory field! Please add the field with ${grammar[en].typeof} type`
-      );
+  //   }
+  //   if (app === 1) {
+  //     errors.push(
+  //       `"${en}" is a mandatory field! Please add the field with ${grammar[en].typeof} type`
+  //     );
 
-    }
-  })
+  //   }
+  // })
 
 
   // })
@@ -376,18 +377,21 @@ const ProjectPageContent = ({
     if (activeStep === 0) {
       setdata(scene);
       getfiles();
+      fl = false;
       if (isJson(scene)) {
         setDownloadable(true);
       }
     }
     if (activeStep === 1) {
       setdata(asset);
+      fl = false;
       if (isJson(asset)) {
         setDownloadable(true);
       }
     }
     if (activeStep === 2) {
       setdata(action);
+      fl = false;
       if (isJson(action)) {
         setDownloadable(true);
       }
@@ -400,6 +404,7 @@ const ProjectPageContent = ({
     }
     if (activeStep === 4) {
       setdata(timeline);
+      fl = false;
       if (isJson(timeline)) {
         setDownloadable(true);
       }
@@ -504,46 +509,118 @@ const ProjectPageContent = ({
     setDisplayErrors([]);
     errors = [];
     var myjson = JSON.parse(data);
+    // try {
+    //   if (activeStep == 2) {
+    //     try {
+    //       {
+    //         rules = myjson.objlist;
+    //         var a = myjson.ObjAction;
+    //         //console.log(a[0]);
+    //         //alert(a[0]);
+    //         for (let i = 0; i < a.length; i++) {
+    //           var c = a[i].actresid;
+    //           //  console.log(c);
+    //           flag = true;
+    //           rules.push(c);
+    //         }
+    //       }
+    //     }
+    //     catch (e) {
+    //       console.log(e);
+    //       setValidated(false);
+    //       setDownloadable(false);
+    //     }
+    //   }
+    // }
+    // catch {
+    //   console.log(e);
+    // }
+    // if (grammarDataArray.length === 0) {
+    //   await getfiles();
+    //   //var temp=Object.keys(grammarDataArray);
+    //   // console.log(grammarDataArray);
+    // }
+
+    // console.log(grammarDataArray[0]);
+    try{
+      var mygrm = "";
+    if (activeStep == 0) mygrm = JSON.parse(grammarDataArray[0]);
+    else if (activeStep == 1) mygrm = JSON.parse(grammarDataArray[1]);
+    else if (activeStep == 2) mygrm = JSON.parse(grammarDataArray[2]);
+    else if (activeStep == 3) mygrm = JSON.parse(grammarDataArray[3]);
+    else if (activeStep == 4) mygrm = JSON.parse(grammarDataArray[4]);}
+    catch(e){
+      console.log(e);
+    }
+    
+
     try {
       if (activeStep == 2) {
-        try{{
-          rules = myjson.objlist;
-          var a = myjson.ObjAction;
-          //console.log(a[0]);
-          //alert(a[0]);
-          for (let i = 0; i < a.length; i++) {
-            var c = a[i].actionname;
-            //  console.log(c);
-            flag = true;
-            rules.push(c);
+        try {
+          {
+            var a = myjson.ObjAction;
+            //console.log(a[0]);
+            //alert(a[0]);
+            for (let i = 0; i < a.length; i++) {
+              var c = a[i].actresid;
+              //  console.log(c);
+              flag = true;
+              if (c) {
+                rules.push(c);
+              }
+
+            }
           }
         }
-      }
-        catch(e){
+        catch (e) {
           console.log(e);
           setValidated(false);
           setDownloadable(false);
+          toast({
+            title: "There are errors in the entered JSON, please check them out!",
+            status: "warning",
+            duration: 5000,
+            isClosable: true,
+            position: "top-right",
+          });
+          return;
+        }
+      }
+      else if (activeStep == 1) {
+        try {
+          {
+            var a = myjson.articles;
+            //console.log(a[0]);
+            //alert(a[0]);
+            for (let i = 0; i < a.length; i++) {
+              var c = a[i]._objectname;
+              //  console.log(c);
+              flag = true;
+              if (c) {
+                rules.push(c);
+              }
+
+            }
+          }
+        }
+        catch (e) {
+          console.log(e);
+          setValidated(false);
+          setDownloadable(false);
+          toast({
+            title: "There are errors in the entered JSON, please check them out!",
+            status: "warning",
+            duration: 5000,
+            isClosable: true,
+            position: "top-right",
+          });
+          return;
         }
       }
     }
     catch {
       console.log(e);
     }
-    if (grammarDataArray.length === 0) {
-      await getfiles();
-      //var temp=Object.keys(grammarDataArray);
-      // console.log(grammarDataArray);
-    }
-
-    // console.log(grammarDataArray[0]);
-
-    let mygrm = "";
-    if (activeStep == 0) mygrm = JSON.parse(grammarDataArray[0]);
-    else if (activeStep == 1) mygrm = JSON.parse(grammarDataArray[1]);
-    else if (activeStep == 2) mygrm = JSON.parse(grammarDataArray[2]);
-    else if (activeStep == 3) mygrm = JSON.parse(grammarDataArray[3]);
-    else if (activeStep == 4) mygrm = JSON.parse(grammarDataArray[4]);
-
 
     if (!jsonValidator(mygrm, myjson)) {
       setValidated(true);
@@ -568,6 +645,7 @@ const ProjectPageContent = ({
     }
     // console.log(typeof errors);
     setDisplayErrors(errors);
+
   };
 
   // const onChangeFile = async (e) => {
@@ -628,7 +706,7 @@ const ProjectPageContent = ({
     if (!isJson(data)) {
       setValidated(false);
       toast({
-        title: "JSON Syntax is not correct",
+        title: "JSON Syntax is not correct,jhj",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -829,6 +907,7 @@ const ProjectPageContent = ({
                 onChange={(newvalue) => {
                   setdata(newvalue);
                   setDownloadable(false);
+                  fl = false;
                 }}
                 value={data}
                 name="grammar-editor"
@@ -1018,9 +1097,9 @@ const ProjectPageContent = ({
           <Tabs isFitted variant='enclosed'
             marginTop={10}>
             <TabList mb='1em'>
-              <Tab>Read</Tab>
+              <Tab>Write</Tab>
               <Tab>
-                Write
+                Read
               </Tab>
             </TabList>
             <TabPanels>
@@ -1120,6 +1199,7 @@ const ProjectPageContent = ({
                               onChange={(newvalue) => {
                                 setdata(newvalue);
                                 setDownloadable(false);
+                                fl = false;
                               }}
                               value={data}
                               name="grammar-editor"
@@ -1331,7 +1411,7 @@ const ProjectPageContent = ({
               </TabPanel>
               <TabPanel>
                 <p>
-                <Grid templateColumns="repeat(6, 1fr)" gap={4}
+                  <Grid templateColumns="repeat(6, 1fr)" gap={4}
                     marginTop={20}>
 
                     <GridItem rowSpan={3} colStart={2} colEnd={5}>
@@ -1417,13 +1497,13 @@ const ProjectPageContent = ({
                                       <a
                                         // key={p.rulename} 
                                         onClick={() => {
-                                          if(perdata.length>0){
+                                          if (perdata.length > 0) {
                                             set_perdata(perdata + `,{"rulename":"${p.rulename}", "description":"${p.description}","logic": "${btoa(p.data_name)}"}\n`)
                                           }
-                                          else{
+                                          else {
                                             set_perdata(perdata + `{"rulename":"${p.rulename}", "description":"${p.description}","logic": "${btoa(p.data_name)}"}\n`)
                                           }
-                                         
+
                                         }}
                                         color="white" >
                                         {p.rulename}
@@ -1452,6 +1532,13 @@ const ProjectPageContent = ({
                             colorScheme="yellow"
                             onClick={() => {
                               // perdata.slice(0,perdata.length -1)
+
+                              if (!fl) {
+                                for (let i = 0; i < rules.length; i++) {
+                                  rules[i] = `"` + rules[i] + `"`
+                                }
+                                fl = true;
+                              }
                               setdata(`{"objects_used":[${rules}],"rules":[${perdata}]}`);
                               toast({
                                 title: "JSON is validated, click next to continue",
@@ -1470,7 +1557,7 @@ const ProjectPageContent = ({
 
                           <Button
 
-                            onClick={() => { set_perdata(" ") }}
+                            onClick={() => { set_perdata(" "); fl = false }}
                             // disabled={!validated || !grammarid}
                             isLoading={submitting}
                             colorScheme="red"
